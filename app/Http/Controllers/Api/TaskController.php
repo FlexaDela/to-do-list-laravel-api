@@ -10,13 +10,11 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(): JsonResponse
     {
+        return response()->json(Task::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(TaskCreateRequest $request): JsonResponse
     {
        return response()
@@ -28,7 +26,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        return $task;
     }
 
     /**
