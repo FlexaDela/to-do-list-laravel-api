@@ -21,9 +21,10 @@ class Task extends Model
             $builder->orderBy('created_at','asc');
         });
     }
-
+    /*
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
+    */
 }
