@@ -13,7 +13,7 @@ class TaskResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'status' => $this->status,
-            'checked' => $this->status,
+            'checked' => $this->checked,
             'description' => $this->description,
             'created_at' => $this->created_at->format('d-m-Y H:i'),
             'updated_at' => $this->updated_at->format('d-m-Y H:i')

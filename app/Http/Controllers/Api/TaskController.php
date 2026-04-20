@@ -37,7 +37,8 @@ class TaskController extends Controller
 
 
     public function show(Task $task): JsonResponse
-    {
+    {   
+
         if(!$task->exists) {
             return response()->json([
             "erro" =>'Laravel não encontrou o id no banco',
