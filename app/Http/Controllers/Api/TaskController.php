@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskCreateRequest;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,7 +13,12 @@ class TaskController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(Task::all());
+        $tasks = Task::all();
+        return response()->json([
+            'success' => true,
+            'data' => TaskResource::collection($tasks),
+            'message' => 'Tarefas entregas com sucesso'
+        ]);
     }
 
     public function store(TaskCreateRequest $request): JsonResponse
