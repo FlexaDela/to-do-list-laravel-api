@@ -15,8 +15,8 @@ class TaskResource extends JsonResource
             'status' => $this->status,
             'checked' => $this->status,
             'description' => $this->description,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'created_at' => $this->created_at->format('d-m-Y H:i'),
+            'updated_at' => $this->updated_at->format('d-m-Y H:i')
         ];
     }
 }

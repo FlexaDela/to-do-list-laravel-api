@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskCreateRequest;
+use App\Http\Requests\TaskEditRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
@@ -14,6 +15,7 @@ class TaskController extends Controller
     public function index(): JsonResponse
     {
         $tasks = Task::all();
+
         return response()->json([
             'success' => true,
             'data' => TaskResource::collection($tasks),
@@ -23,31 +25,51 @@ class TaskController extends Controller
 
     public function store(TaskCreateRequest $request): JsonResponse
     {
+        $task = Task::create($request->validated());
+
        return response()
-       ->json(Task::create($request->validated()), 201);
+       ->json([
+        'success' => true,
+        'data' => new TaskResource($task),
+        'message' => 'Tarefa criada com sucesso'
+       ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
+
+    public function show(Task $task): JsonResponse
     {
-        return $task;
+        if(!$task->exists) {
+            return response()->json([
+            "erro" =>'Laravel não encontrou o id no banco',
+            ], 404);
+        }
+        return response()
+            ->json([
+            'success' => true,
+            'data' => new TaskResource($task),
+            'message' => 'Tarefa entregue com sucesso'
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Task $task)
-    {
-        //
+ 
+    public function update(TaskEditRequest $request, Task $task)
+    {   
+        $task->update($request->validated());
+        return response()->json([
+            'success' => true,
+            'data' => new TaskResource($task),
+            'message' => 'Tarefa atualizada'
+        ],201);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tarefa deletada'
+        ],201);
     }
 }

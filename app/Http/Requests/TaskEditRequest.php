@@ -12,7 +12,7 @@ class TaskEditRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return True;
     }
 
     /**
@@ -23,7 +23,9 @@ class TaskEditRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'string|min:3|max:100',
+            'status' => 'string',
+            'description' => 'string',
         ];
     }
 }
