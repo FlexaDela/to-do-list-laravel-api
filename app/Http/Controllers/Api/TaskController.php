@@ -8,17 +8,23 @@ use App\Http\Requests\TaskEditRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
     public function index(): JsonResponse
     {
-        $tasks = Task::all();
+        $tasks = Task::paginate(3);
 
         return response()->json([
             'success' => true,
             'data' => TaskResource::collection($tasks),
+            'pagination' => [
+            'total' => $tasks->total(),
+            'count' => $tasks->count(),
+            'per_page' => $tasks->perPage(),
+            'current_page' => $tasks->currentPage(),
+            'total_pages' => $tasks->lastPage(),
+            ],
             'message' => 'Tarefas entregas com sucesso'
         ]);
     }
@@ -56,6 +62,7 @@ class TaskController extends Controller
     public function update(TaskEditRequest $request, Task $task)
     {   
         $task->update($request->validated());
+
         return response()->json([
             'success' => true,
             'data' => new TaskResource($task),
@@ -64,7 +71,7 @@ class TaskController extends Controller
     }
 
     
-    public function destroy(Task $task)
+    public function destroy(Task $task): JsonResponse
     {
         $task->delete();
 
