@@ -20,7 +20,8 @@ Route::post('/login',function(Request $request) {
     }
 
     $user = Auth::user();
-    $token = $user->createToken('token');
+    $user->tokens()->delete();
+    $token = $user->createToken('token', ['task:delete']);
 
     return response()->json($token->plainTextToken);
 });

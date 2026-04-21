@@ -7,6 +7,7 @@ use App\Http\Requests\TaskCreateRequest;
 use App\Http\Requests\TaskEditRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 
 class TaskController extends Controller
@@ -43,7 +44,7 @@ class TaskController extends Controller
 
 
     public function show(Task $task): JsonResponse
-    {   
+    {
 
         if(!$task->exists) {
             return response()->json([
@@ -58,9 +59,9 @@ class TaskController extends Controller
         ]);
     }
 
- 
+
     public function update(TaskEditRequest $request, Task $task)
-    {   
+    {
         $task->update($request->validated());
 
         return response()->json([
@@ -70,8 +71,8 @@ class TaskController extends Controller
         ],201);
     }
 
-    
-    public function destroy(Task $task): JsonResponse
+
+    public function destroy(Task $task, Authenticatable $user): JsonResponse
     {
         $task->delete();
 
