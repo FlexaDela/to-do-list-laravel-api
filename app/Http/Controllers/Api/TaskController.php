@@ -10,6 +10,7 @@ use App\Models\Task;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
@@ -48,18 +49,24 @@ class TaskController extends Controller
 
     public function show(Task $task): JsonResponse
     {
-
-        if(!$task->exists) {
-            return response()->json([
-            "erro" =>'Laravel não encontrou o id no banco',
-            ], 404);
+        if(Gate::allows('view', $task)){
+            if(!$task->exists) {
+                return response()->json([
+                "erro" =>'Laravel não encontrou o id no banco',
+                ], 404);
+            }
+                return response()
+                ->json([
+                'success' => true,
+                'data' => new TaskResource($task),
+                'message' => 'Tarefa entregue com sucesso'
+                ]);
         }
-        return response()
-            ->json([
-            'success' => true,
-            'data' => new TaskResource($task),
-            'message' => 'Tarefa entregue com sucesso'
-        ]);
+
+        return response()->json([
+            'succes' => false,
+            'message' => 'usuario não é autorizado'
+        ], 403);
     }
 
 
