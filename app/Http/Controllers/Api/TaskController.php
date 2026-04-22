@@ -9,30 +9,33 @@ use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     public function index(): JsonResponse
     {
-        $tasks = Task::paginate(3);
+       $tasks = Auth::user()->task()->get();
+        if (empty($tasks)) {
+            return response()->json([
+                'success' => true,
+                'data' => TaskResource::collection($tasks),
+                'message' => 'Tarefas entregas com sucesso'
+            ]);
+        }
 
         return response()->json([
             'success' => true,
-            'data' => TaskResource::collection($tasks),
-            'pagination' => [
-            'total' => $tasks->total(),
-            'count' => $tasks->count(),
-            'per_page' => $tasks->perPage(),
-            'current_page' => $tasks->currentPage(),
-            'total_pages' => $tasks->lastPage(),
-            ],
-            'message' => 'Tarefas entregas com sucesso'
+            'message' => 'Este usuario não possue tarefas registradas'
         ]);
+
+
     }
 
     public function store(TaskCreateRequest $request): JsonResponse
     {
-        $task = Task::create($request->validated());
+
+       $task = Auth::user()->task()->create($request->validated());
 
        return response()
        ->json([
