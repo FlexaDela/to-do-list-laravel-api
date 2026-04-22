@@ -84,11 +84,18 @@ class TaskController extends Controller
 
     public function destroy(Task $task, Authenticatable $user): JsonResponse
     {
-        $task->delete();
+        if(Gate::allows('delete', $task)){
+            $task->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tarefa deletada'
+            ],201);
+        }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Tarefa deletada'
-        ],201);
+            'success' => false,
+            'message' => 'Você não pode delatar esta tarefa'
+        ], 403);
     }
 }
