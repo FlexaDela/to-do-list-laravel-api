@@ -31,10 +31,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    /*
+
     public function task(): HasMany
     {
         return $this->hasMany(Task::class);
     }
-    */
+    
 }

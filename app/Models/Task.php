@@ -13,13 +13,12 @@ use Illuminate\Notifications\Notifiable;
 #[UseFactory(TaskFactory::class)]
 class Task extends Model
 {
-    /** @use HasFactory<TaskFactory> */
     use HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
+        'phase',
         'status',
-        'checked',
         'description'
     ];
 
@@ -29,10 +28,10 @@ class Task extends Model
             $builder->orderBy('created_at','asc');
         });
     }
-    /*
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-    */
+
 }
